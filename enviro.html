@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENVIRO TEST SOLUTION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #F0F2F5; --primary-blue: #0A4D68; --secondary-blue: #088395;
+            --accent-green: #05BFDB; --light-accent: #F7F7F7; --text-dark: #333;
+            --text-light: #FFFFFF; --container-shadow: 0 8px 32px rgba(10, 77, 104, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .app-container { display: flex; width: 95vw; height: 90vh; max-width: 1300px; max-height: 850px; background-color: white; border-radius: 20px; box-shadow: var(--container-shadow); overflow: hidden; }
+        .sidebar { width: 300px; background: linear-gradient(180deg, var(--primary-blue), var(--secondary-blue)); color: var(--text-light); padding: 25px; display: flex; flex-direction: column; }
+        .sidebar-header { text-align: center; margin-bottom: 40px; }
+        .sidebar-header .logo { font-size: 2rem; font-weight: 600; color: var(--accent-green); }
+        .sidebar-header .tagline { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+        .nav-menu ul { list-style: none; }
+        .nav-item { background: transparent; border: none; color: var(--text-light); width: 100%; text-align: left; padding: 18px 15px; border-radius: 10px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; font-size: 1rem; transition: background-color 0.3s; font-family: 'Montserrat'; font-weight: 400; }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .nav-item > .icon { margin-right: 15px; width: 20px; text-align: center; font-size: 1.1rem; }
+        .nav-item .chevron { margin-left: auto; transition: transform 0.3s ease; }
+        .nav-item.active .chevron { transform: rotate(180deg); }
+        .sub-nav { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; background-color: rgba(0,0,0,0.2); border-radius: 8px; margin: -5px 5px 10px 5px; }
+        .sub-nav-link { display: block; color: var(--text-light); text-decoration: none; padding: 12px 20px 12px 45px; font-size: 0.9rem; transition: background-color 0.3s; border-left: 3px solid transparent; cursor: pointer; }
+        .sub-nav-link:hover { background-color: rgba(255, 255, 255, 0.1); border-left-color: var(--accent-green); }
+        .chat-area { flex-grow: 1; display: flex; flex-direction: column; background-color: var(--light-accent); }
+        .chat-header { padding: 20px; border-bottom: 1px solid #E0E0E0; background: white; text-align: center; }
+        .chat-header h1 { color: var(--primary-blue); font-size: 1.5rem; }
+        .chat-body { flex-grow: 1; padding: 20px 30px; overflow-y: auto; }
+        .message { display: flex; margin-bottom: 20px; max-width: 75%; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .message .icon { width: 40px; height: 40px; line-height: 40px; text-align: center; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
+        .message .text { padding: 15px; border-radius: 18px; line-height: 1.6; word-wrap: break-word; }
+        .user-message { align-self: flex-end; flex-direction: row-reverse; }
+        .user-message .icon { background-color: var(--accent-green); color: white; margin-right: 0; margin-left: 15px; }
+        .user-message .text { background-color: var(--accent-green); color: white; border-bottom-right-radius: 5px; }
+        .bot-message { align-self: flex-start; }
+        .bot-message .icon { background-color: var(--primary-blue); color: white; }
+        .bot-message .text { background-color: white; color: var(--text-dark); border: 1px solid #EAEAEA; border-bottom-left-radius: 5px; }
+        .typing-indicator .text { font-style: italic; color: #777; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #E0E0E0; background: white; display: flex; align-items: center; }
+        #user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 25px; padding: 12px 20px; font-size: 1rem; font-family: 'Montserrat'; transition: border-color 0.3s; }
+        #user-input:focus { outline: none; border-color: var(--primary-blue); }
+        #send-btn { background-color: var(--primary-blue); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; cursor: pointer; font-size: 1.5rem; transition: background-color 0.3s, transform 0.2s; }
+        #send-btn:hover { background-color: var(--secondary-blue); transform: scale(1.1); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="logo">ENVIRO</div><p class="tagline">Test Solution</p></div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><button class="nav-item" data-topic="Water Testing"><i class="fas fa-water icon"></i><span>Water Testing</span><i class="fas fa-chevron-down chevron"></i></button><div class="sub-nav"><a class="sub-nav-link" data-topic="Drinking Water Purity">Drinking Water Purity</a><a class="sub-nav-link" data-topic="Wastewater Analysis">Wastewater Analysis</a><a class="sub-nav-link" data-topic="Groundwater Contamination">Groundwater Contamination</a></div></li>
+                    <li><button class="nav-item" data-topic="Air Quality"><i class="fas fa-wind icon"></i><span>Air Quality</span><i class="fas fa-chevron-down chevron"></i></button><div class="sub-nav"><a class="sub-nav-link" data-topic="Indoor Air Pollutants">Indoor Air Pollutants</a><a class="sub-nav-link" data-topic="Industrial Emissions">Industrial Emissions</a></div></li>
+                    <li><button class="nav-item" data-topic="Soil Analysis"><i class="fas fa-seedling icon"></i><span>Soil Analysis</span><i class="fas fa-chevron-down chevron"></i></button><div class="sub-nav"><a class="sub-nav-link" data-topic="Agricultural Soil Health">Agricultural Soil Health</a><a class="sub-nav-link" data-topic="Heavy Metal Screening">Heavy Metal Screening</a></div></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="chat-area">
+            <header class="chat-header"><h1>AI Assistant</h1></header>
+            <div class="chat-body" id="chat-body"><div class="message bot-message"><i class="icon fas fa-robot"></i><p class="text">Welcome to ENVIRO TEST SOLUTION! Click a topic to learn more, or ask me a specific question.</p></div></div>
+            <footer class="chat-input-area"><input type="text" id="user-input" placeholder="Type your question here..."><button id="send-btn"><i class="fas fa-paper-plane"></i></button></footer>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const chatBody = document.getElementById('chat-body');
+            const API_ENDPOINT = 'http://localhost:3000/chat';
+
+            const appendMessage = (text, type) => {
+                const iconClass = type === 'user' ? 'fa-user' : 'fa-robot';
+                const messageClass = type === 'user' ? 'user-message' : 'bot-message';
+                const messageHTML = `<div class="message ${messageClass}"><i class="icon fas ${iconClass}"></i><p class="text">${text}</p></div>`;
+                chatBody.insertAdjacentHTML('beforeend', messageHTML);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                return chatBody.lastElementChild;
+            };
+            
+            const showTypingIndicator = () => appendMessage("Thinking...", 'bot');
+
+            const askQuestion = async (question) => {
+                if (!question) return;
+                appendMessage(question, 'user');
+                const typingIndicator = showTypingIndicator();
+                try {
+                    const response = await fetch(API_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question })
+                    });
+                    if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
+                    const data = await response.json();
+                    typingIndicator.querySelector('.text').textContent = data.answer;
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    typingIndicator.querySelector('.text').textContent = "I'm experiencing technical difficulties. Please check the server connection and try again.";
+                }
+            };
+
+            document.querySelectorAll('.nav-item[data-topic], .sub-nav-link[data-topic]').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const topic = e.currentTarget.dataset.topic;
+                    const question = `Give me a summary about ${topic}.`;
+                    askQuestion(question);
+                    if (e.currentTarget.classList.contains('nav-item')) {
+                        const subNav = e.currentTarget.nextElementSibling;
+                        const isActive = e.currentTarget.classList.toggle('active');
+                        document.querySelectorAll('.nav-item.active').forEach(otherItem => {
+                            if (otherItem !== e.currentTarget) {
+                                otherItem.classList.remove('active');
+                                otherItem.nextElementSibling.style.maxHeight = '0px';
+                            }
+                        });
+                        subNav.style.maxHeight = isActive ? subNav.scrollHeight + 'px' : '0px';
+                    }
+                });
+            });
+
+            const sendManualQuestion = () => {
+                const question = userInput.value.trim();
+                if (question) {
+                    askQuestion(question);
+                    userInput.value = '';
+                }
+            };
+
+            sendBtn.addEventListener('click', sendManualQuestion);
+            userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendManualQuestion(); });
+        });
+    </script>
+</body>
+</html>
