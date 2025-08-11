@@ -12,7 +12,12 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { PineconeStore } from '@langchain/pinecone';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://envio-frontend-ytj7.vercel.app',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
 app.use(bodyParser.json());
 
 const pinecone = new Pinecone();
